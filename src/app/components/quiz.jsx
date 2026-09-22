@@ -4,9 +4,9 @@ import '@/app/components/quiz.css'
 
 export default function QuizApp() {
     const [score, setScore] = useState(0);
-    const [hasSelected, setHasSeleted] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [userAnswers, setUserAnswers] = useState([]);
+    const hasAnswered = userAnswers[currentQuestion] !== undefined;
     const questions = [
         {
             id: 1,
@@ -50,9 +50,13 @@ export default function QuizApp() {
         else {
             event.target.style.backgroundColor = "red";
         }
-        setHasSeleted(true);
+        setUserAnswers(prev => [
+            ...prev,
+            event.target.value
+        ])
         event.target.style.border = "none";
-    };
+    }
+
 
     return (
         <div className='entire-quiz-wrapper'>
@@ -63,20 +67,31 @@ export default function QuizApp() {
                     onClick={() => {
                         setCurrentQuestion(0)
                         setScore(0)
-                        hasSelected(false)
+                        setUserAnswers([])
                     }}>Reset</button>
             </div>
             {currentQuestion < questions.length && (
                 <div className='main-quiz-section'>
+                    <div className='progress-bar-wrapper'>
+                        <div className='progress-bar'
+                        style={{width: `${((currentQuestion + 1) / totalQuestions)* 100}%`}}
+                        ></div>
+                    </div>
                     <p className='question'>{questions[currentQuestion].question}</p>
                     <div className='options-wrapper'>
                         {questions[currentQuestion].options.map(opt => (
                             <button
                                 key={opt}
                                 value={opt}
+                                disabled={hasAnswered}
                                 onClick={(event) => optionSelectedCheck(event)}
-                                disabled={hasSelected}
-                                className='option-btn'>
+                                className='option-btn'
+                                style={{
+                                    backgroundColor: opt === userAnswers[currentQuestion]
+                                        ? userAnswers[currentQuestion] === questions[currentQuestion].answer
+                                            ? "green" : "red"
+                                        : ""
+                                }}>
                                 {opt}
                             </button>
                         ))}
@@ -84,20 +99,17 @@ export default function QuizApp() {
 
                     <div className='nav-btns'>
                         <button
-                        disabled={currentQuestion===0}
+                            disabled={currentQuestion === 0}
                             className='back-btn'
                             onClick={() => {
                                 setCurrentQuestion(prev => prev - 1)
-                                setHasSeleted(false)
-                                setScore(prev => prev - 1)
                             }}>Back</button>
 
                         <button
                             className='next-btn'
-                            disabled={!hasSelected}
+                            disabled={!hasAnswered}
                             onClick={() => {
                                 setCurrentQuestion(prev => prev + 1)
-                                setHasSeleted(false)
                             }}>Next</button>
                     </div>
                 </div>

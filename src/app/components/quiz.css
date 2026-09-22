@@ -13,7 +13,7 @@
     background-color: white;
     color: blueviolet;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 0px;
     font-size: 16px;
     border-radius: 10px;
     transition: all 0.2s ease;
@@ -21,6 +21,20 @@
 
 .reset-btn:hover{
     cursor: pointer;
+}
+
+.progress-bar-wrapper{
+    width: 100%;
+    border: 1px solid black;
+    height: 10px;
+    border-radius: 50px;
+}
+
+.progress-bar{
+    height: 100%;
+    background-color: blueviolet;
+    border-radius: 50px;
+    transition: width 0.3s ease;
 }
 
 .question{
